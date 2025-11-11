@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -7,6 +7,7 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import { useMutation } from "convex/react";
 import { useEffect, useCallback } from "react";
 import { api } from "../../convex/_generated/api";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +27,14 @@ function LayoutContent({ children }) {
     if (user && createUser) {
       try {
         const result = await createUser({
-          email: user?.primaryEmailAddress?.emailAddress ?? '',
-          imageUrl: user?.imageUrl ?? '',
-          name: user?.fullName ?? '',
-          userId: user?.id ?? ''
+          email: user?.primaryEmailAddress?.emailAddress ?? "",
+          imageUrl: user?.imageUrl ?? "",
+          name: user?.fullName ?? "",
+          userId: user?.id ?? "",
         });
-        console.log('User created/updated:', result);
+        console.log("User created/updated:", result);
       } catch (error) {
-        console.error('Error creating user:', error);
+        console.error("Error creating user:", error);
       }
     }
   }, [user, createUser]);
@@ -53,9 +54,13 @@ export default function RootLayout({ children }) {
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <ConvexClientProvider>
-            <LayoutContent>{children}</LayoutContent>
+            <LayoutContent>
+              {children}
+            </LayoutContent>
+            <Toaster position="top-center" richColors />
           </ConvexClientProvider>
         </body>
+        
       </html>
     </ClerkProvider>
   );
