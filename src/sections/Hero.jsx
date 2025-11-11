@@ -10,7 +10,6 @@ const Hero = () => {
   const router = useRouter();
   
   const onSend = () => {
-    // Navigate to trip planning page when user is signed in
     router.push('/trip');
   };
 
@@ -30,7 +29,7 @@ const Hero = () => {
             Plan Your Trip Now
           </Button>
         ) : (
-          <SignInButton mode="modal">
+          <SignInButton mode="modal" forceRedirectUrl="/trip">
             <Button variant="secondary">
               Plan Your Trip Now
             </Button>
