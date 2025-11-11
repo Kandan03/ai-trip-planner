@@ -57,8 +57,8 @@ const Trip = () => {
       console.log("Trip saved with ID:", tripId);
       toast.success("Trip created successfully!");
       
-      // You can navigate to the trip details page if you want
-      // router.push(`/trip/${tripId}`);
+      // Redirect to trip details page
+      router.push(`/trip-details/${tripId}`);
     } catch (error) {
       console.error("Error saving trip:", error);
       toast.error("Failed to save trip");
