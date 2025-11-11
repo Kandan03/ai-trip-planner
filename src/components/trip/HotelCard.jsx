@@ -14,13 +14,11 @@ const HotelCard = ({ hotel, delay = 0 }) => {
 
   useEffect(() => {
     const fetchPhoto = async () => {
-      // Add delay to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, delay));
       
       setIsLoading(true);
       console.log('HotelCard: Starting fetch for', hotel?.hotelName);
       
-      // Check if AI provided a valid image URL (not example.com)
       if (hotel?.hotelImageUrl && 
           hotel.hotelImageUrl !== "None" && 
           hotel.hotelImageUrl !== "null" && 
@@ -34,12 +32,10 @@ const HotelCard = ({ hotel, delay = 0 }) => {
           setIsLoading(false);
           return;
         } catch {
-          // Invalid URL, continue to Google API
           console.log('HotelCard: Invalid AI URL, fetching from Google API');
         }
       }
       
-      // Fetch from Google Places API
       try {
         console.log('HotelCard: Calling getPlacePhoto for', hotel?.hotelName);
         const photo = await getPlacePhoto(hotel?.hotelName);

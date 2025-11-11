@@ -10,10 +10,6 @@ const TripCard = ({ trip, index }) => {
 
   useEffect(() => {
     const fetchPhoto = async () => {
-      // Stagger API requests to prevent rate limiting
-      const delay = index * 300;
-      await new Promise(resolve => setTimeout(resolve, delay));
-      
       try {
         const url = await getPlacePhoto(trip.location);
         setPhotoUrl(url);
@@ -29,14 +25,14 @@ const TripCard = ({ trip, index }) => {
     } else {
       setLoading(false);
     }
-  }, [trip.location, index]);
+  }, [trip.location]);
 
   return (
     <Link href={`/trip-details/${trip._id}`}>
       <div className="border rounded-xl overflow-hidden hover:shadow-lg transition-all cursor-pointer h-full">
-        <div className="relative w-full h-[200px] bg-linear-to-br from-blue-400 to-purple-500">
+        <div className="relative w-full h-[200px] bg-gray-200">
           {loading ? (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-400 to-purple-500">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
             </div>
           ) : photoUrl ? (
@@ -49,13 +45,11 @@ const TripCard = ({ trip, index }) => {
                 e.target.nextSibling.style.display = 'flex';
               }}
             />
-          ) : null}
-          <div 
-            className="absolute inset-0 flex items-center justify-center text-white text-center bg-linear-to-br from-blue-400 to-purple-500"
-            style={{ display: photoUrl && !loading ? 'none' : 'flex' }}
-          >
-            <h3 className="text-2xl font-bold px-4">{trip.location}</h3>
-          </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-white text-center bg-linear-to-br from-blue-400 to-purple-500">
+              <h3 className="text-2xl font-bold px-4">{trip.location}</h3>
+            </div>
+          )}
         </div>
         
         <div className="p-4">

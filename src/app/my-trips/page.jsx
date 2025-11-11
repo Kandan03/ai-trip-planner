@@ -9,7 +9,7 @@ import Link from "next/link";
 import TripCard from "@/components/trip/TripCard";
 
 const MyTrips = () => {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
   
   const trips = useQuery(api.trips.getUserTrips, 
@@ -18,6 +18,22 @@ const MyTrips = () => {
       : "skip"
   );
 
+  // Show loading while Clerk is checking authentication
+  if (!isLoaded) {
+    return (
+      <div>
+        <Header />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show sign in message only after auth is loaded and user is not signed in
   if (!user) {
     return (
       <div>

@@ -12,12 +12,10 @@ const PlaceCard = ({ place, delay = 0 }) => {
 
   useEffect(() => {
     const fetchPhoto = async () => {
-      // Add delay to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, delay));
       
       setIsLoading(true);
       
-      // Check if AI provided a valid image URL (not example.com)
       if (place?.placeImageUrl && 
           place.placeImageUrl !== "None" && 
           place.placeImageUrl !== "null" && 
@@ -30,11 +28,9 @@ const PlaceCard = ({ place, delay = 0 }) => {
           setIsLoading(false);
           return;
         } catch {
-          // Invalid URL, continue to Google API
         }
       }
       
-      // Fetch from Google Places API
       try {
         const photo = await getPlacePhoto(place?.placeName);
         if (photo) {
@@ -53,69 +49,61 @@ const PlaceCard = ({ place, delay = 0 }) => {
   }, [place?.placeName, place?.placeImageUrl, delay]);
 
   return (
-    <div className="border rounded-lg p-4 hover:shadow-md transition-all">
-      <div className="flex gap-4">
-        {/* Place Image */}
-        <div className="relative w-32 h-32 shrink-0 rounded-lg overflow-hidden bg-gray-200 flex items-center justify-center">
-          {isLoading ? (
-            <div className="text-gray-400 text-xs">Loading...</div>
-          ) : photoUrl ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
-              src={photoUrl}
-              alt={place?.placeName || "Place"}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = '<div class="text-gray-400 text-xs p-2 text-center">📍<br/>' + (place?.placeName || 'Place') + '</div>';
-              }}
-            />
-          ) : (
-            <div className="text-gray-400 text-xs p-2 text-center">
-              📍<br/>{place?.placeName || 'Place'}
-            </div>
-          )}
-        </div>
+    <Link href={googleMapsUrl} target="_blank">
+      <div className="border rounded-lg p-4 my-4 hover:shadow-md transition-all cursor-pointer">
+        <div className="flex gap-4">
+          <div className="relative w-32 h-32 shrink-0 rounded-lg overflow-hidden bg-gray-200 flex items-center justify-center">
+            {isLoading ? (
+              <div className="text-gray-400 text-xs">Loading...</div>
+            ) : photoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={photoUrl}
+                alt={place?.placeName || "Place"}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<div class="text-gray-400 text-xs p-2 text-center">📍<br/>' + (place?.placeName || 'Place') + '</div>';
+                }}
+              />
+            ) : (
+              <div className="text-gray-400 text-xs p-2 text-center">
+                📍<br/>{place?.placeName || 'Place'}
+              </div>
+            )}
+          </div>
 
-        {/* Place Details */}
-        <div className="flex-1">
-          <div className="flex items-start justify-between">
-            <div>
-              <h4 className="font-bold text-lg">{place?.placeName}</h4>
-              {place?.time && (
-                <p className="text-sm text-gray-600 mt-1">🕒 {place?.time}</p>
+          <div className="flex-1">
+            <div className="flex items-start justify-between">
+              <div>
+                <h4 className="font-bold text-lg">{place?.placeName}</h4>
+                {place?.time && (
+                  <p className="text-sm text-gray-600 mt-1">🕒 {place?.time}</p>
+                )}
+              </div>
+              {place?.ticketPricing && (
+                <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                  {place?.ticketPricing}
+                </span>
               )}
             </div>
-            {place?.ticketPricing && (
-              <span className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
-                {place?.ticketPricing}
-              </span>
-            )}
+
+            <p className="text-sm text-gray-700 mt-2 line-clamp-2">
+              {place?.placeDetails}
+            </p>
+
+            <div className="flex gap-4 mt-3 text-sm">
+              {place?.timeToTravel && (
+                <span className="text-gray-600">⏱️ {place?.timeToTravel}</span>
+              )}
+              {place?.rating && (
+                <span className="text-gray-600">⭐ {place?.rating}</span>
+              )}
+            </div>
           </div>
-
-          <p className="text-sm text-gray-700 mt-2 line-clamp-2">
-            {place?.placeDetails}
-          </p>
-
-          <div className="flex gap-4 mt-3 text-sm">
-            {place?.timeToTravel && (
-              <span className="text-gray-600">⏱️ {place?.timeToTravel}</span>
-            )}
-            {place?.rating && (
-              <span className="text-gray-600">⭐ {place?.rating}</span>
-            )}
-          </div>
-
-          <Link
-            href={googleMapsUrl}
-            target="_blank"
-            className="inline-block mt-3 text-sm text-blue-600 hover:underline"
-          >
-            📍 View on Google Maps
-          </Link>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

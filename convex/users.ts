@@ -10,14 +10,12 @@ export const createUser = mutation({
     email: v.string(),
   },
   handler: async (ctx, args) => {
-    // Check if user already exists
     const existingUser = await ctx.db
       .query("UserTable")
       .withIndex("by_userId", (q) => q.eq("userId", args.userId))
       .first();
 
     if (existingUser) {
-      // Update existing user
       await ctx.db.patch(existingUser._id, {
         name: args.name,
         imageUrl: args.imageUrl,
@@ -25,7 +23,6 @@ export const createUser = mutation({
       });
       return existingUser._id;
     } else {
-      // Create new user
       const userId = await ctx.db.insert("UserTable", {
         userId: args.userId,
         name: args.name,
