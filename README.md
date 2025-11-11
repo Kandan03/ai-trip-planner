@@ -152,12 +152,12 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/ai-trip-planner/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/Kandan03/ai-trip-planner/issues).
 
 ## 👨‍💻 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
+**Somaskandan B**
+- GitHub: [@Kandan03](https://github.com/Kandan03)
 
 ## 🙏 Acknowledgments
 
