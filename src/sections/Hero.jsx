@@ -1,7 +1,19 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Hero = () => {
+  const { user } = useUser();
+  const router = useRouter();
+  
+  const onSend = () => {
+    // Navigate to trip planning page when user is signed in
+    router.push('/trip');
+  };
+
   return (
     <div>
       <h1 className="text-6xl font-bold text-center mt-20">
@@ -13,9 +25,17 @@ const Hero = () => {
         to your interests, travel style, and preferences – completely free.
       </p>
       <div className="flex justify-center mt-8">
-        <Button variant="secondary" size="lg">
-          Get Started
-        </Button>
+        {user ? (
+          <Button variant="secondary" onClick={onSend}>
+            Plan Your Trip Now
+          </Button>
+        ) : (
+          <SignInButton mode="modal">
+            <Button variant="secondary">
+              Plan Your Trip Now
+            </Button>
+          </SignInButton>
+        )}
       </div>
     </div>
   );
