@@ -17,7 +17,6 @@ const HotelCard = ({ hotel, delay = 0 }) => {
       await new Promise(resolve => setTimeout(resolve, delay));
       
       setIsLoading(true);
-      console.log('HotelCard: Starting fetch for', hotel?.hotelName);
       
       if (hotel?.hotelImageUrl && 
           hotel.hotelImageUrl !== "None" && 
@@ -27,30 +26,22 @@ const HotelCard = ({ hotel, delay = 0 }) => {
           !hotel.hotelImageUrl.includes('example.com')) {
         try {
           new URL(hotel.hotelImageUrl);
-          console.log('HotelCard: Using AI provided URL', hotel.hotelImageUrl);
           setPhotoUrl(hotel.hotelImageUrl);
           setIsLoading(false);
           return;
         } catch {
-          console.log('HotelCard: Invalid AI URL, fetching from Google API');
         }
       }
       
       try {
-        console.log('HotelCard: Calling getPlacePhoto for', hotel?.hotelName);
         const photo = await getPlacePhoto(hotel?.hotelName);
-        console.log('HotelCard: Photo result:', photo);
         if (photo) {
           setPhotoUrl(photo);
-          console.log('HotelCard: Set photo URL to', photo);
-        } else {
-          console.log('HotelCard: No photo returned');
         }
       } catch (error) {
-        console.error('HotelCard: Error fetching photo:', error);
+        console.error('Error fetching hotel photo:', error.message);
       } finally {
         setIsLoading(false);
-        console.log('HotelCard: Finished loading, photoUrl:', photoUrl);
       }
     };
 

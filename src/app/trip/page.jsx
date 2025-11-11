@@ -30,10 +30,6 @@ const Trip = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const SaveAiTrip = async (tripData) => {
     try {
       const parsedTripData = JSON.parse(tripData);
@@ -54,10 +50,8 @@ const Trip = () => {
         tripData: parsedTripData,
       });
       
-      console.log("Trip saved with ID:", tripId);
       toast.success("Trip created successfully!");
       
-      // Redirect to trip details page
       router.push(`/trip-details/${tripId}`);
     } catch (error) {
       console.error("Error saving trip:", error);
@@ -100,7 +94,6 @@ const Trip = () => {
       .replace("{totalDays}", formData?.noOfDays);
     const result = await chatSession.sendMessage(FINAL_PROMPT);
 
-    console.log("--", result?.response?.text());
     setLoading(false);
     SaveAiTrip(result?.response?.text());
   };

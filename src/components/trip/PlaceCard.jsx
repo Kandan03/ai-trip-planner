@@ -37,7 +37,7 @@ const PlaceCard = ({ place, delay = 0 }) => {
           setPhotoUrl(photo);
         }
       } catch (error) {
-        console.error('Error in PlaceCard:', error);
+        console.error('Error fetching place photo:', error.message);
       } finally {
         setIsLoading(false);
       }

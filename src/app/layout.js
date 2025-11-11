@@ -26,15 +26,14 @@ function LayoutContent({ children }) {
   const createNewUser = useCallback(async () => {
     if (user && createUser) {
       try {
-        const result = await createUser({
+        await createUser({
           email: user?.primaryEmailAddress?.emailAddress ?? "",
           imageUrl: user?.imageUrl ?? "",
           name: user?.fullName ?? "",
           userId: user?.id ?? "",
         });
-        console.log("User created/updated:", result);
       } catch (error) {
-        console.error("Error creating user:", error);
+        console.error("Error creating user:", error.message);
       }
     }
   }, [user, createUser]);
