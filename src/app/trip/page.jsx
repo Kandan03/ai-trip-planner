@@ -9,13 +9,20 @@ import Autocomplete from "react-google-autocomplete";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
 import { chatSession } from "@/services/AIModal";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 const Trip = () => {
   const { user } = useUser();
+  const router = useRouter();
   const [place, setPlace] = useState();
   const [openDailog, setOpenDailog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState([]);
+  
+  const createTrip = useMutation(api.trips.createTrip);
+  
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -26,6 +33,37 @@ const Trip = () => {
   useEffect(() => {
     console.log(formData);
   }, [formData]);
+
+  const SaveAiTrip = async (tripData) => {
+    try {
+      const parsedTripData = JSON.parse(tripData);
+      
+      // Extract location name from the place object
+      const locationName = formData?.location?.formatted_address || 
+                          formData?.location?.name || 
+                          formData?.location?.label || 
+                          "Unknown Location";
+      
+      const tripId = await createTrip({
+        userId: user?.id,
+        userEmail: user?.primaryEmailAddress?.emailAddress,
+        location: locationName,
+        noOfDays: parseInt(formData?.noOfDays),
+        budget: formData?.budget,
+        traveler: formData?.traveler,
+        tripData: parsedTripData,
+      });
+      
+      console.log("Trip saved with ID:", tripId);
+      toast.success("Trip created successfully!");
+      
+      // You can navigate to the trip details page if you want
+      // router.push(`/trip/${tripId}`);
+    } catch (error) {
+      console.error("Error saving trip:", error);
+      toast.error("Failed to save trip");
+    }
+  };
 
   const OnGenerateTrip = async () => {
     if (!user) {
@@ -45,9 +83,16 @@ const Trip = () => {
     }
     setLoading(true);
     toast.loading("Please wait... We are working on it...");
+    
+    // Extract location name
+    const locationName = formData?.location?.formatted_address || 
+                        formData?.location?.name || 
+                        formData?.location?.label || 
+                        "Unknown Location";
+    
     const FINAL_PROMPT = AI_PROMPT.replace(
       "{location}",
-      formData?.location?.label
+      locationName
     )
       .replace("{totalDays}", formData?.noOfDays)
       .replace("{traveler}", formData?.traveler)
